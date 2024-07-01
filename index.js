@@ -6,6 +6,9 @@ const ErrorHandler = require("./middlewares/error-handler");
 const userRoutes = require("./routes/user");
 cartRoutes = require("./routes/cart");
 
+//product-management
+const productRoutes = require("./routes/product-route")
+
 const app = express();
 
 app.use(cookieParser());
@@ -14,6 +17,7 @@ app.use(express.json());
 //Routes
 app.use("/api/users", userRoutes);
 app.use("/api/cart", cartRoutes);
+app.use(`${CONTEXT_PATH}products`,productRoutes)
 
 app.use("*", (req, res, next) => {
   console.log(`route ${req.baseUrl} not found`);
