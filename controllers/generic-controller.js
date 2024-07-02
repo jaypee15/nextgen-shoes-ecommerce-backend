@@ -7,7 +7,7 @@ const ErrorObject = require("../utils/error");
 const sendEmail = require("../utils/email");
 const Econsole = require("../utils/econsole-log");
 
-const { JWT_COOKIE_EXPIRES_IN, JWT_EXPIRES_IN, JWT_SECRET, NODE_ENV } =
+const { JWT_COOKIE_EXPIRES_IN, EXPIRES_IN, JWT_SECRET, NODE_ENV } =
   process.env;
 
   const otp=async (noOfDigits,Model)=>{
@@ -22,8 +22,8 @@ const { JWT_COOKIE_EXPIRES_IN, JWT_EXPIRES_IN, JWT_SECRET, NODE_ENV } =
 const signToken = (id) => {
   const myconsole = new Econsole("generic-controller.js", "signToken", "")
   myconsole.log("entry")
-  console.log(JWT_SECRET, { expiresIn: JWT_EXPIRES_IN, })
-  return jwt.sign({ id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN, });
+  console.log(JWT_SECRET, { expiresIn: EXPIRES_IN, })
+  return jwt.sign({ id }, JWT_SECRET, { expiresIn: EXPIRES_IN, });
 };
 
 const createAndSendToken = catchAsync(async (user, statusCode, res) => {

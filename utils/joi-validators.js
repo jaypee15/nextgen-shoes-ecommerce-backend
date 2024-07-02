@@ -2,69 +2,39 @@ const Joi = require('joi')
 const catchAsync=require("../utils/catch-async")
 const Econsole = require("../utils/econsole-log")
 
-const uniqueArrayValidator = (value, helpers) => {
-    const uniqueValues = new Set(value);
-    if (uniqueValues.size !== value.length) {
-        return helpers.error('any.unique');
-    }
-    return value;
-};
-exports.validateAdmin = catchAsync(async (req, res, next) => {
-    const myconsole = new Econsole("joi-validators.js", "validateAdmin", "")
+exports.validateProduct = catchAsync(async (req, res, next) => {
+    /*
+    id, name, description, price, discount_price, colors, sizes, images, delivery_info, return_info
+    */
+    const myconsole = new Econsole("joi-validators.js", "validateProduct", "")
     myconsole.log("entry")
     //myconsole.log(req)
-    const { firstName, secondName, surname, phoneNumber, email, password, passwordConfirm} = req.body;
-    console.log(firstName, secondName, surname, phoneNumber, email, password, passwordConfirm)
-    const obj = {firstName, secondName, surname, phoneNumber, email, password, passwordConfirm }
-    var expectedAdminProperties = Joi.object({
-        firstName: Joi.string().required(),
-        secondName: Joi.string().required(),
-        surname: Joi.string().required(),
-        phoneNumber:Joi.string().regex(/^(\+?(\d{1,3}))?(\s|-)?(\d{3})(\s|-)?(\d{3})(\s|-)?(\d{4})$/).required(),
-        email: Joi.string().required(),
-        password:Joi.string().regex(/[A-Za-z\d^\w\d\s]{8,}/).required(),
-        passwordConfirm:Joi.string().valid(Joi.ref('password')).required().strict()
-    })
-    const { error } = expectedAdminProperties.validate(obj)
-    if (error) { myconsole.log(error.message);res.json({ errorMessage: error.message });return error.message; } else { myconsole.log("exits"), next() }
-});
-exports.validateContestant = catchAsync(async (req, res, next) => {
-    const myconsole = new Econsole("joi-validators.js", "validateContestant", "")
-    myconsole.log("entry")
-    //myconsole.log(req)
-    const { name, username, images} = req.body;
-    const admin = req.params.id;
-    req.body.admin = admin;
-    console.log(name, username, images,admin)
-    const obj = {name, username, images,admin}
-    var expectedContestantProperties = Joi.object({
-        name: Joi.string().required(),
-        username: Joi.string().required(),
-        images: Joi.array().items(Joi.string()).min(1).required(),
-        admin: Joi.string().required(),
-    })
-    const { error } = expectedContestantProperties.validate(obj)
-    if (error) { myconsole.log(error.message);res.json({ errorMessage: error.message });return error.message; } else { myconsole.log("exits"), next() }
-});
-
-exports.validateVotingRoom = catchAsync(async (req, res, next) => {
-    const myconsole = new Econsole("joi-validators.js", "validateVotingRoom", "")
-    myconsole.log("entry")
-    //myconsole.log(req)
-    const {awardorposition,description,contestants,votingstarts,votingends} = req.body;
-    const admin = req.params.id;
-    req.body.admin = admin;
-    console.log(awardorposition,description,contestants,votingstarts,votingends,admin)
-    const obj = {awardorposition,description,contestants,votingstarts,votingends,admin}
-    var expectedPositionProperties = Joi.object({
-        awardorposition: Joi.string().required(),
+    const { name, description, price, discount_price, colors, sizes, images, delivery_info, return_info } = req.body;
+    console.log(name, description, price, discount_price, colors, sizes, images, delivery_info, return_info)
+    const obj = { name, description, price, discount_price, colors, sizes, images, delivery_info, return_info }
+    var expectedProductProperties = Joi.object({
+        name: Joi.string().required().messages({
+            "string.base": "name should be a type of text",
+            "string.empty": "name is required",
+            "string.min": "Password must be at least 8 characters",
+            "any.required": "User must have a password",
+          }),
         description: Joi.string().required(),
-        contestants: Joi.array().items(Joi.string()).min(2).required(),
-        votingstarts: Joi.date().required(),
-        votingends: Joi.date().required(),
-        admin: Joi.string().required(),
+        price: Joi.number().required(),
+        discount_price: Joi.number(),
+        colors: Joi.array().items(Joi.string()).min(1).required(),
+        sizes: Joi.array().items(Joi.number()).min(1).required(),
+        images: Joi.array().items(Joi.string().uri().required()).min(1).required(),
+        delivery_info: Joi.string().required(),
+        return_info: Joi.string().required(),
     })
-    const { error } = expectedPositionProperties.validate(obj)
-    if (error) { myconsole.log(error.message);res.json({ errorMessage: error.message });return error.message; } else { myconsole.log("exits"), next() }
+    const { error } = expectedProductProperties.validate(obj)
+    if (error) { 
+        myconsole.log(error.message);
+        res.json({ errorMessage: error.message });
+        return error.message; 
+    } else { 
+        myconsole.log("exits"), 
+        next() 
+    }
 });
-

@@ -7,8 +7,8 @@ const { cloudDelete } = require("../utils/cloudinary")
 
 
 
-exports.getProduct = getOne(Product)
-exports.createProduct=createOne(Product)
+exports.retrieveProduct = getOne(Product)
+exports.addANewProduct=createOne(Product)
 exports.retrieveAllProducts = catchAsync(async (req, res) => {
   const myconsole = new Econsole("product-controller.js", "retrieveAllProducts", "")
   myconsole.log("entry")
