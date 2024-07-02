@@ -5,7 +5,6 @@ const cookieParser = require("cookie-parser");
 const ErrorHandler = require("./middlewares/error-handler");
 const userRoutes = require("./routes/user");
 const cartRoutes = require("./routes/cart");
-const {CONTEXT_PATH} = process.env;
 
 //product-management
 const productRoutes = require("./routes/product-route")

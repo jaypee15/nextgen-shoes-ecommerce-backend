@@ -15,8 +15,8 @@ router.use(protect);
 
 // cart routes
 router.post("/", addToCart);
-router.get("", getCart);
+router.get("/", getCart);
 router.patch("/:productId", updateCart);
-router.delete("/:product", removeFromCart);
+router.delete("/:productId", removeFromCart);
 
 module.exports = router;
