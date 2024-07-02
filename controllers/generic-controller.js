@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const catchAsync = require("../utils/catch-async");
 const ErrorObject = require("../utils/error");
-const sendEmail = require("../utils/email");
+const sendEmail = require("../utils/email-service");
 const Econsole = require("../utils/econsole-log");
 
 const { JWT_COOKIE_EXPIRES_IN, EXPIRES_IN, JWT_SECRET, NODE_ENV } =

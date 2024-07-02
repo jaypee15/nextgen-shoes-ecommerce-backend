@@ -35,14 +35,13 @@ exports.uploadImagesToCloudinary = async (req, res, next) => {
     await Promise.all(
         req.files.map(async (imageFile, index) => {
             /*resizedFilePath = `${__dirname}/resized_images/resized_${imageFile.originalname}`*/;
-            resizedFilePath = path.join(os.tmpdir(), `resized-image-${imageFile.originalname}.jpg`);
+            /*resizedFilePath = path.join(os.tmpdir(), `resized-image-${imageFile.originalname}.jpg`);
             await sharp(imageFile.path)
                 .resize({ width: 300 })
                 .toFormat('jpeg')
                 .jpeg({ quality: 90 })
-                .toFile(resizedFilePath)
-                /*toFile(resizedFilePath)*/;
-            imageFile2 = { url: resizedFilePath, id: req.params.id + "-" + index, };
+                .toFile(resizedFilePath)*/
+            imageFile2 = { url: imageFile.path, id: Date.now() + "-" + index, };
             myconsole.log("imageFile2=",imageFile2)
             req.body.images.push((await cloudUpload(imageFile2)).secure_url);
         })

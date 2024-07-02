@@ -4,7 +4,8 @@ const cookieParser = require("cookie-parser");
 
 const ErrorHandler = require("./middlewares/error-handler");
 const userRoutes = require("./routes/user");
-cartRoutes = require("./routes/cart");
+const cartRoutes = require("./routes/cart");
+const {CONTEXT_PATH} = process.env;
 
 //product-management
 const productRoutes = require("./routes/product-route")
@@ -17,7 +18,8 @@ app.use(express.json());
 //Routes
 app.use("/api/users", userRoutes);
 app.use("/api/cart", cartRoutes);
-app.use(`${CONTEXT_PATH}products`,productRoutes)
+
+app.use("/api/products",productRoutes)
 
 app.use("*", (req, res, next) => {
   console.log(`route ${req.baseUrl} not found`);

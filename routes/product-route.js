@@ -1,9 +1,6 @@
 
 const express = require("express");
 const {
-  protect
-} = require("../controllers/generic-controller");
-const {
   addANewProduct,
   retrieveAllProducts,
   retrieveProduct,
@@ -13,12 +10,7 @@ const {
 } = require("../controllers/product-controller");
 const {validateProduct}= require("../utils/joi-validators")
 const {uploadImagesToTempLocation,uploadImagesToCloudinary}= require("../utils/file-upload")
-const User = require("../models/user");
-const Product = require("../models/product");
-
-
-
-
+const protect = require("../middlewares/protect");
 
 
 const router = express.Router();
@@ -27,6 +19,6 @@ router.post("/",protect,uploadImagesToTempLocation,uploadImagesToCloudinary,vali
 router.get("/",retrieveAllProducts);
 router.route("/:id").
 get(retrieveProduct).
-patch(protect(User),uploadImagesToTempLocation,uploadImagesToCloudinary,validateProduct,updateProduct).
-delete(protect(User), removeProductImages,removeProduct);//:id = product
+patch(protect,uploadImagesToTempLocation,uploadImagesToCloudinary,validateProduct,updateProduct).
+delete(protect, removeProductImages,removeProduct);//:id = product
 module.exports = router;

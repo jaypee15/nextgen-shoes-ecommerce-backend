@@ -18,3 +18,5 @@ router.post("", addToCart);
 router.get("", getCart);
 router.patch("/:productId", updateCart);
 router.delete("/:product", removeFromCart);
+
+module.exports = router;
