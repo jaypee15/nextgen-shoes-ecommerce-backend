@@ -29,7 +29,7 @@ exports.uploadImagesToTempLocation = image.array("images")
 
 exports.uploadImagesToCloudinary = async (req, res, next) => {
     const myconsole = new Econsole("file-uploads.js", "uploadImagesToCloudinary", "")
-    let resizedFilePath
+    //let resizedFilePath
     let imageFile2
     req.body.images =[]
     await Promise.all(
