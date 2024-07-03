@@ -1,3 +1,6 @@
+/*
+id, name, description, price, discount_price, colors, sizes, images, delivery_info, return_info
+*/
 const mongoose = require("mongoose");
 const validator = require("validator");
 
@@ -9,29 +12,38 @@ const ProductSchema = new mongoose.Schema(
       required: [true, "provide a product description"],
     },
     price: { type: Number, required: [true, "provide a product price"] },
-    discountRate: {
-      type: Number,
+    discount_price: {type: Number },
+    colors:{
+      type: [String],
+      required: true,
       validate: {
-        validator: function (v) {
-          return v <= 100;
+        validator: function(arr) {
+          return arr.length > 0;
         },
-        message: "Discount rate must be less than or equal to 100",
-      },
+        message: 'There must at least be one color.'
+      }
+    },
+    sizes:{
+      type: [Number],
+      required: true,
+      validate: {
+        validator: function(arr) {
+          return arr.length > 0;
+        },
+        message: 'There must at least be one size.'
+      }
+    },
+    images:{
+      type: [String],
+      required: true,
+      validate: {
+        validator: function(arr) {
+          return arr.length > 0;
+        },
+        message: 'There must at least be one image.'
+      }
     },
 
-    quantity: {
-      type: Number,
-      required: [true, "provide a quantity"],
-      validate: {
-        validator: Number.isInteger,
-      },
-      message: "Quantity must be a whole number",
-    },
-    sellerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
     colors: [String],
     sizes: [String],
     images: {
@@ -39,8 +51,18 @@ const ProductSchema = new mongoose.Schema(
       required: [true, "provide atleast one image"],
     },
 
-    deliveryInfo: { type: String },
-    returnInfo: { type: String },
+    delivery_info: { 
+      type: String,
+      required: true,
+     },
+    return_info: { 
+      type: String,
+      required: true,
+     },
+  },
+  {
+    toObject: {virtuals: true,},
+    toJSON: {virtuals: true,},
   },
   { timestamps: true }
 );

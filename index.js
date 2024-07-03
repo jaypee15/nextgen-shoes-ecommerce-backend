@@ -4,7 +4,10 @@ const cookieParser = require("cookie-parser");
 
 const ErrorHandler = require("./middlewares/error-handler");
 const userRoutes = require("./routes/user");
-cartRoutes = require("./routes/cart");
+const cartRoutes = require("./routes/cart");
+
+//product-management
+const productRoutes = require("./routes/product-route")
 
 const app = express();
 
@@ -14,6 +17,8 @@ app.use(express.json());
 //Routes
 app.use("/api/users", userRoutes);
 app.use("/api/carts", cartRoutes);
+
+app.use("/api/products",productRoutes)
 
 app.use("*", (req, res, next) => {
   console.log(`route ${req.baseUrl} not found`);
