@@ -1,3 +1,6 @@
+/*
+id, user_id, delivery_address, delivery_type, payment_method, voucher_code, total_amount
+*/
 const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema(
