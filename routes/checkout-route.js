@@ -5,11 +5,12 @@ const {
   processOrder,
 }=require("../controllers/checkout-controller")
 const {
-  verifyPayment
+  verifyPayment,
+  getPaymentDetails,
 }=require("../utils/payment")
 const router = express.Router();
 
 router.post('/', protect,processCart);
-router.get("/:userId",protect,verifyPayment,processOrder);
+router.get("/:userId",protect,verifyPayment,getPaymentDetails,processOrder);
 
 module.exports = router;

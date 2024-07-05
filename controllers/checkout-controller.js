@@ -70,11 +70,9 @@ exports.processCart = catchAsync(async (req, res) => {
             //await cart.save();
             req.body.amount = totalAmount;
             req.body.orderId=order.id;
-            /*req.body.redirect_url = `${req.protocol}://${req.get("host")}${FLW_CALLBACK_URL}/${userId}?` +
-                `amount=${totalAmount}&currency=${FLW_CUSTOMER_CURRENCY}&deliveryType=${req.body.deliveryType}&` +
-                `deliveryAddress=${req.body.deliveryAddress}&paymentMethod=${req.body.paymentMethod}&` +
-                `voucherCode=${req.body.voucherCode}&orderId=${order.id}`;*/
-            req.body.redirect_url = `${req.protocol}://${req.get("host")}${FLW_CALLBACK_URL}/${userId}?amount=${totalAmount}&orderId=${order.id}`
+            req.body.redirect_url = `${req.protocol}://${req.get("host")}${FLW_CALLBACK_URL}/${userId}?` +
+                `amount=${totalAmount}&currency=${FLW_CUSTOMER_CURRENCY}&orderId=${order.id}`;
+            //req.body.redirect_url = `${req.protocol}://${req.get("host")}${FLW_CALLBACK_URL}/${userId}?amount=${totalAmount}&orderId=${order.id}`
             const response = await paymentIntialization(req.body, res);
             if (response.status === "success") {
                 res.status(200).json({
@@ -105,8 +103,10 @@ exports.processOrder = catchAsync(async (req, res) => {
           status: req.query.status,
         });
     
-        const savedLog = await transactionLog.save();
+        await transactionLog.save();
         const order = await Order.findOne({userId }).populate('products.productId');
+        order["paymentMethod"]=req.query.paymentMethod;
+        order.save();
         res.status(200).json({ message: 'Order sucessfully processed awaiting delivery', order:order});
       } catch (error) {
         console.error('Error saving transaction log:', error);
