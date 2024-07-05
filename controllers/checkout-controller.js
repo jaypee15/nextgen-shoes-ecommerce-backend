@@ -64,8 +64,7 @@ exports.processCart = catchAsync(async (req, res) => {
         };
         if (validateOrder(orderProperties, res)) {
             const order = new Order(orderProperties);
-            //await order.save();
-
+            await order.save();
             // Clear the cart
             //cart.items = [];
             //await cart.save();
@@ -98,6 +97,7 @@ myconsole.log("exits")
 
 exports.processOrder = catchAsync(async (req, res) => {
     const myconsole = new Econsole("checkout-controller.js", "processOrder", "")
+    const userId = req.params.userId
     //make entry in transaction log
     try {
         const transactionLog = new TransactionLog({
@@ -105,9 +105,9 @@ exports.processOrder = catchAsync(async (req, res) => {
           status: req.query.status,
         });
     
-        //const savedLog = await transactionLog.save();
-        //console.log('Transaction log saved:', savedLog);
-        res.status(200).json({ message: 'Order sucessfully processed awaiting delivery' });
+        const savedLog = await transactionLog.save();
+        const order = await Order.findOne({userId }).populate('products.productId');
+        res.status(200).json({ message: 'Order sucessfully processed awaiting delivery', order:order});
       } catch (error) {
         console.error('Error saving transaction log:', error);
         res.status(400).json({ message: `Order processing unsucessful, ${error}` });
