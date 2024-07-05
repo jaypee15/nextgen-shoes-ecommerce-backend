@@ -9,6 +9,9 @@ const cartRoutes = require("./routes/cart");
 //product-management
 const productRoutes = require("./routes/product-route")
 
+//checkout & order
+const checkoutRoutes = require("./routes/checkout-route.js")
+
 const app = express();
 
 app.use(cookieParser());
@@ -19,6 +22,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/carts", cartRoutes);
 
 app.use("/api/products",productRoutes)
+app.use("/api/checkout",checkoutRoutes)
+app.use("/api/order",checkoutRoutes)
 
 app.use("*", (req, res, next) => {
   console.log(`route ${req.baseUrl} not found`);

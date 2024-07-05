@@ -1,6 +1,5 @@
-const got = require("got");
 const Flutterwave = require("flutterwave-node-v3");
-const Econsole = require("../utils/econsole-log")
+const Econsole = require("./econsole-log")
 const {
   FLW_SECRET_KEY,
   FLW_PUBLIC_KEY,
@@ -11,23 +10,31 @@ const {
   FLW_CUSTOMER_PHONENUMBER,
   FLW_CUSTOMER_EMAIL,
   FLW_CUSTOMER_TITLE,
-  VOTING_REL_URL,
 } = process.env;
 exports.paymentIntialization = async (req,res) => {
   const myconsole = new Econsole("payment.js", "paymentIntialization", "")
   myconsole.log("entry")
+  myconsole.log("FLW_CUSTOMER_CURRENCY",FLW_CUSTOMER_CURRENCY)
   myconsole.log(req);
+  const response = (async () => {
   try {
+    const { default: got } = await import('got');
     req.currency = FLW_CUSTOMER_CURRENCY
     const response = await got
-      .post(FLW_URL, {
+      .post(`${FLW_URL}/payments`, {
         headers: {
           Authorization: `Bearer ${FLW_SECRET_KEY}`,
         },
         json: {
           tx_ref: req.uuid,
+          /*userId:req.userId,
           amount: req.amount,
           currency: req.currency,
+          deliveryType:req.deliveryType,
+          deliveryAddress:req.deliveryAddress,
+          paymentMethod: req.paymentMethod,
+          voucherCode: req.voucherCode,
+          orderId: req.orderId,*/
           redirect_url: req.redirect_url,
           meta: {
             consumer_id: FLW_CUSTOMER_CONSUMER_ID,
@@ -53,6 +60,8 @@ exports.paymentIntialization = async (req,res) => {
     myconsole.log("err.response.body",err.response.body);
     return err
   }
+})();
+return response;
 };
 
 exports.verifyPayment = async (req,res,next) => {
@@ -72,10 +81,40 @@ exports.verifyPayment = async (req,res,next) => {
         // Inform the customer their payment was unsuccessful
         res.status(404).json({
           message: "payment unsuccessful",
-          votinglink:`${req.protocol}://${req.get("host")}${VOTING_REL_URL}${req.params.id}?votingroomId=${req.query.votingroomId}&adminId=${req.query.adminId}`
         });
       }
       myconsole.log("exits")
     })
     .catch((err)=>console.log(err));
+};
+exports.getPaymentDetails = async (req,res,next) => {
+  const url = `${FLW_URL}/transactions/${req.query.transaction_id}/verify`;
+  try {
+    const { default: got } = await import('got');
+    const response = await got(url, {
+      headers: {
+        Authorization: `Bearer ${FLW_SECRET_KEY}`,
+      },
+      responseType: 'json',
+    });
+
+    const transaction = response.body.data;
+
+    if (transaction) {
+      console.log('Transaction Details:', transaction);
+      console.log('Payment Method:', transaction.payment_type);
+      req.query.paymentMethod = transaction.payment_type;
+      next();
+    } else {
+      console.log('Transaction not found');
+      res.status(404).json({
+        message: "Transaction not found",
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching transaction details:', error);
+    res.status(404).json({
+      message: `Error fetching transaction details:, ${error}`
+    });
+  }
 };
