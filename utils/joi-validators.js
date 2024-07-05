@@ -16,8 +16,6 @@ exports.validateProduct = catchAsync(async (req, res, next) => {
         name: Joi.string().required().messages({
             "string.base": "name should be a type of text",
             "string.empty": "name is required",
-            "string.min": "Password must be at least 8 characters",
-            "any.required": "User must have a password",
           }),
         description: Joi.string().required(),
         price: Joi.number().required(),
@@ -38,3 +36,36 @@ exports.validateProduct = catchAsync(async (req, res, next) => {
         next() 
     }
 });
+exports.validateOrder = (obj,res) => {
+    /*
+    id, user_id, delivery_address, delivery_type(Door Delivery/Pick Up in Store), payment_method, voucher_code, total_amount
+    */
+    const myconsole = new Econsole("joi-validators.js", "validateOrder", "")
+    myconsole.log("entry")
+    myconsole.log(obj)
+    var expectedOrderProperties = Joi.object({
+        userId: Joi.string().required(),
+        deliveryAddress: Joi.string().required(),
+        deliveryType: Joi.string().valid('door delivery', 'pick up in store').required(),
+        paymentMethod: Joi.string().optional().allow(''),
+        voucherCode: Joi.string().optional().allow(''),
+        totalAmount: Joi.number().required(),
+        products: Joi.array().items(
+          Joi.object({
+            productId: Joi.string().required(),
+            quantity: Joi.number().required(),
+            price: Joi.number().required(),
+          })
+        ).required(),
+      });
+    const { error } = expectedOrderProperties.validate(obj)
+    if (error) { 
+        myconsole.log(error.message);
+        res.json({ errorMessage: error.message });
+        myconsole.log("exits with false")
+        return false; 
+    } else { 
+        myconsole.log("exits with true")
+        return true;
+    }
+};
