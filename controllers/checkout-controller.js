@@ -95,8 +95,8 @@ exports.processCart = catchAsync(async (req, res) => {
             const order = new Order(orderProperties);
             await order.save();
             // Clear the cart
-            //cart.items = [];
-            //await cart.save();
+            cart.items = [];
+            await cart.save();
             req.body.amount = totalAmount;
             req.body.orderId=order.id;
             req.body.redirect_url = `${req.protocol}://${req.get("host")}${PAYMENT_CALLBACK_URL}/${userId}?` +
