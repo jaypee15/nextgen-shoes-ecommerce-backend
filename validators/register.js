@@ -19,10 +19,11 @@ const createUserSchema = Joi.object({
     "string.email": "Email must be a valid email address",
     "any.required": "Please provide an email address",
   }),
-  phoneNumber: Joi.string().required().messages({
+  phoneNumber: Joi.string().required().min(11).messages({
     "string.base": "Phone number should be a type of text",
     "string.empty": "Phone number is required",
     "any.required": "Please provide a phone number",
+    "string.min" : "Password must be at least 11 characters long",
   }),
   password: Joi.string().min(8).pattern(new RegExp("^[a-zA-Z0-9]{8,30}$")).required().messages({
     "string.base": "Password should be a type of text",
