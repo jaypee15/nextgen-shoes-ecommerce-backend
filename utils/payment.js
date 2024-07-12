@@ -4,22 +4,14 @@ const {
   FLW_SECRET_KEY,
   FLW_PUBLIC_KEY,
   FLW_URL,
-  FLW_CUSTOMER_CURRENCY,
-  FLW_CUSTOMER_CONSUMER_ID,
-  FLW_CUSTOMER_CONSUMER_MAC,
-  FLW_CUSTOMER_PHONENUMBER,
-  FLW_CUSTOMER_EMAIL,
-  FLW_CUSTOMER_TITLE,
 } = process.env;
-exports.paymentIntialization = async (req,res) => {
+exports.paymentIntialization = async (req) => {
   const myconsole = new Econsole("payment.js", "paymentIntialization", "")
   myconsole.log("entry")
-  myconsole.log("FLW_CUSTOMER_CURRENCY",FLW_CUSTOMER_CURRENCY)
   myconsole.log(req);
   const response = (async () => {
   try {
     const { default: got } = await import('got');
-    req.currency = FLW_CUSTOMER_CURRENCY
     const response = await got
       .post(`${FLW_URL}/payments`, {
         headers: {
@@ -27,27 +19,19 @@ exports.paymentIntialization = async (req,res) => {
         },
         json: {
           tx_ref: req.uuid,
-          /*userId:req.userId,
-          amount: req.amount,
-          currency: req.currency,
-          deliveryType:req.deliveryType,
-          deliveryAddress:req.deliveryAddress,
-          paymentMethod: req.paymentMethod,
-          voucherCode: req.voucherCode,
-          orderId: req.orderId,*/
           redirect_url: req.redirect_url,
           meta: {
-            consumer_id: FLW_CUSTOMER_CONSUMER_ID,
-            consumer_mac: FLW_CUSTOMER_CONSUMER_MAC,
+            consumer_id: req.userId,
+            consumer_mac: req.mac,
           },
           customer: {
-            email: FLW_CUSTOMER_EMAIL,
-            phonenumber: FLW_CUSTOMER_PHONENUMBER,
-            name: FLW_CUSTOMER_EMAIL,
+            email: req.email,
+            phonenumber: req.phoneNumber,
+            name: req.name,
           },
           customizations: {
-            title: FLW_CUSTOMER_TITLE,
-            // logo: FLW_CUSTOMER_LOGO,
+            title: PAYMENT_CUSTOMER_TITLE,
+            // logo: PAYMENT_CUSTOMER_LOGO,
           },
         },
       })

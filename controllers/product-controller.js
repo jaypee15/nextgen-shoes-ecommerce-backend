@@ -21,6 +21,19 @@ exports.retrieveAllProducts = catchAsync(async (req, res) => {
   myconsole.log("exits")
   res.status(200).json({ status: "success", results: docs.length, data: docs, });
 });
+exports.searchProducts = catchAsync(async (req, res) => {
+  const myconsole = new Econsole("product-controller.js", "searchProducts", "")
+  myconsole.log("entry")
+  const features = new QueryMethod(Product.find({ name: new RegExp(query, 'i') }), req.query)
+    .sort()
+    .limit()
+    .paginate()
+    .filter();
+  const docs = await features.query;
+  myconsole.log("docs=",docs)
+  myconsole.log("exits")
+  res.status(200).json({ status: "success", results: docs.length, data: docs, });
+});
 exports.updateProduct = updateOne(Product)
 exports.removeProduct = deleteOne(Product)
 exports.removeProductImages = catchAsync(async (req, res, next) => {

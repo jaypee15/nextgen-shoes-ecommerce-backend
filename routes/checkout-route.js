@@ -7,7 +7,7 @@ const {
 const {
   verifyPayment,
   getPaymentDetails,
-}=require("../utils/payment")
+}=require("../utils/payment-paystack")
 const router = express.Router();
 
 router.post('/', protect,processCart);

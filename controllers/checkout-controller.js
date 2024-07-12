@@ -14,21 +14,50 @@ const Cart = require("../models/cart");
 const Voucher = require("../models/voucher");
 const Order = require("../models/order");
 const TransactionLog = require("../models/transaction-log");
+const User = require("../models/user");
 const { v4: uuidGenerator } = require("uuid")
 const { validateOrder } = require("../utils/joi-validators")
-const { paymentIntialization } = require("../utils/payment");
+const { paymentIntialization } = require("../utils/payment-paystack");
 const {
-    FLW_CALLBACK_URL,
-    FLW_CUSTOMER_CURRENCY,
+    PAYMENT_CALLBACK_URL,
 } = process.env;
-
+const macaddress = require('macaddress');
 
 exports.processCart = catchAsync(async (req, res) => {
     const myconsole = new Econsole("checkout-controller.js", "processCart", "")
-    const userId = req.user.userId.toString();
-    req.body.userId=userId;
+    myconsole.log("user=",req.user.userId)
+    req.body.userId = req.user.userId
+    // Find the model for the user
+    const user = await User.findById(req.user.userId);
+    console.log("user=",user)
+    req.body.email=user.email;
+    req.body.phoneNumber=user.phoneNumber;
+    req.body.name = `${user.firstName}-${user.lastName}`
 
+    //get mac address
+    let mac=macaddress.all((err, all) => {
+        if (err) {
+          myconsole.error('Error getting MAC addresses:', err);
+          return;
+        }
+      
+        myconsole.log('MAC addresses:', all);
+      
+        // Example: Get the MAC address of the first network interface found
+        const interfaces = Object.keys(all);
+        if (interfaces.length > 0) {
+          const firstInterface = interfaces[0];
+          const mac = all[firstInterface].mac;
+          myconsole.log(`MAC address of ${firstInterface}: ${mac}`);
+        } else {
+          myconsole.log('No network interfaces found.');
+        }
+        return macaddress;
+      });
+      myconsole.log("mac=",mac)
+    req.body.mac = mac;
     try {
+        const userId = req.user.userId;
         // Find the cart for the user
         const cart = await Cart.findOne({ userId }).populate('items.productId');
 
@@ -70,14 +99,15 @@ exports.processCart = catchAsync(async (req, res) => {
             //await cart.save();
             req.body.amount = totalAmount;
             req.body.orderId=order.id;
-            req.body.redirect_url = `${req.protocol}://${req.get("host")}${FLW_CALLBACK_URL}/${userId}?` +
-                `amount=${totalAmount}&currency=${FLW_CUSTOMER_CURRENCY}&orderId=${order.id}`;
-            //req.body.redirect_url = `${req.protocol}://${req.get("host")}${FLW_CALLBACK_URL}/${userId}?amount=${totalAmount}&orderId=${order.id}`
+            req.body.redirect_url = `${req.protocol}://${req.get("host")}${PAYMENT_CALLBACK_URL}/${userId}?` +
+                `amount=${totalAmount}&currency=${req.body.currency}&orderId=${order.id}`;
             const response = await paymentIntialization(req.body, res);
-            if (response.status === "success") {
+            myconsole.log("response=",response)
+            if (response.status === "success"||"true") {
                 res.status(200).json({
                     status: "payment link generated successfully",
-                    paymentlink: response.data.link
+                    //paymentlink: response.data.link //for flutterwave
+                    paymentlink: response.data.authorization_url 
                 });
             } else {
                 res.status(500).json({

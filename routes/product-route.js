@@ -6,7 +6,8 @@ const {
   retrieveProduct,
   updateProduct,
   removeProduct,
-  removeProductImages
+  removeProductImages,
+  searchProducts
 } = require("../controllers/product-controller");
 const {validateProduct}= require("../utils/joi-validators")
 const {uploadImagesToTempLocation,uploadImagesToCloudinary}= require("../utils/file-upload")
@@ -16,7 +17,8 @@ const protect = require("../middlewares/protect");
 const router = express.Router();
 
 router.post("/",protect,uploadImagesToTempLocation,uploadImagesToCloudinary,validateProduct,addANewProduct);
-router.get("/",retrieveAllProducts);
+router.get("/",retrieveAllProducts).
+get("/search",searchProducts);
 router.route("/:id").
 get(retrieveProduct).
 patch(protect,uploadImagesToTempLocation,uploadImagesToCloudinary,validateProduct,updateProduct).
