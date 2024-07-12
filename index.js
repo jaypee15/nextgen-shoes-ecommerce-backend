@@ -6,7 +6,7 @@ const cors = require("cors");
 const ErrorHandler = require("./middlewares/error-handler");
 const userRoutes = require("./routes/user");
 const cartRoutes = require("./routes/cart");
-const favouriteRoutes = require("./routes/favourites");
+const favouriteRoutes = require("./routes/favourite");
 
 //product-management
 const productRoutes = require("./routes/product-route");
