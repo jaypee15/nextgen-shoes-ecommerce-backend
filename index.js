@@ -1,16 +1,18 @@
 // load dependencies
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 const ErrorHandler = require("./middlewares/error-handler");
 const userRoutes = require("./routes/user");
 const cartRoutes = require("./routes/cart");
+const favouriteRoutes = require("./routes/favourites");
 
 //product-management
-const productRoutes = require("./routes/product-route")
+const productRoutes = require("./routes/product-route");
 
 //checkout & order
-const checkoutRoutes = require("./routes/checkout-route.js")
+const checkoutRoutes = require("./routes/checkout-route.js");
 
 const app = express();
 const cors = require('cors');
@@ -22,10 +24,11 @@ app.use(cors());
 //Routes
 app.use("/api/users", userRoutes);
 app.use("/api/carts", cartRoutes);
+app.use("./api/favourites", favouriteRoutes)
 
-app.use("/api/products",productRoutes)
-app.use("/api/checkout",checkoutRoutes)
-app.use("/api/order",checkoutRoutes)
+app.use("/api/products", productRoutes);
+app.use("/api/checkout", checkoutRoutes);
+app.use("/api/order", checkoutRoutes);
 
 app.use("*", (req, res, next) => {
   console.log(`route ${req.baseUrl} not found`);
