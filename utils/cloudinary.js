@@ -16,7 +16,7 @@ exports.cloudUpload = async (image) => {
   let result
   try {
     result = await cloudinary.v2.uploader.upload(image.url, {
-      public_id: image.id,
+      public_id: image.id, background_removal: 'cloudinary_ai',
     });
   } catch (error) {
     myconsole.error(error)

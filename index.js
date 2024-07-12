@@ -15,6 +15,7 @@ const productRoutes = require("./routes/product-route");
 const checkoutRoutes = require("./routes/checkout-route.js");
 
 const app = express();
+const cors = require('cors');
 
 app.use(cookieParser());
 app.use(express.json());
