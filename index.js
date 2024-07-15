@@ -9,8 +9,12 @@ const cartRoutes = require("./routes/cart");
 const favouriteRoutes = require("./routes/favourite");
 const recommendRoutes = require("./routes/recommendation");
 
+
 //product-management
 const productRoutes = require("./routes/product-route");
+
+//review-management
+const reviewRoutes = require("./routes/review-route");
 
 //checkout & order
 const checkoutRoutes = require("./routes/checkout-route.js");
@@ -28,6 +32,7 @@ app.use("/api/favourites", favouriteRoutes);
 app.use("/api/recommend/", recommendRoutes);
 
 app.use("/api/products", productRoutes);
+app.use("/api/reviews", reviewRoutes);
 app.use("/api/checkout", checkoutRoutes);
 app.use("/api/order", checkoutRoutes);
 

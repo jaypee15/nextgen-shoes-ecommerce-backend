@@ -6,13 +6,12 @@ const { createOne, getOne, updateOne, deleteOne } = require("./generic-controlle
 const { cloudDelete } = require("../utils/cloudinary")
 
 
-
 exports.retrieveProduct = getOne(Product)
 exports.addANewProduct=createOne(Product)
 exports.retrieveAllProducts = catchAsync(async (req, res) => {
   const myconsole = new Econsole("product-controller.js", "retrieveAllProducts", "")
   myconsole.log("entry")
-  const features = new QueryMethod(Product.find(), req.query)
+  const features = new QueryMethod(Product.find().populate("reviews"), req.query)
     .sort()
     .limit()
     .paginate()
@@ -57,4 +56,3 @@ exports.removeProductImages = catchAsync(async (req, res, next) => {
   myconsole.log("exits")
   next()
 });
-
