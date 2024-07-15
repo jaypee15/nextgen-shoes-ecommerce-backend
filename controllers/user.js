@@ -44,7 +44,7 @@ const constructUserResponse = (user, token) => {
 
 // Create User
 const createUser = asyncHandler(async (req, res, next) => {
-  const { firstName, lastName, email, phoneNumber, password } = req.body;
+  const { firstName, lastName, email, phoneNumber, password,role } = req.body;
 
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
@@ -57,6 +57,7 @@ const createUser = asyncHandler(async (req, res, next) => {
     email,
     phoneNumber,
     password,
+    role
   });
 
   const token = generateToken(user._id);

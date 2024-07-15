@@ -1,4 +1,5 @@
 const Joi = require('joi')
+const crypto = require('crypto');
 const catchAsync=require("../utils/catch-async")
 const Econsole = require("../utils/econsole-log")
 
@@ -94,4 +95,33 @@ exports.validateReview = catchAsync(async (req, res, next) => {
       myconsole.log("exits with true")
       next();
   }
+});
+exports.validateVoucher = catchAsync(async (req, res, next) => {
+    /*
+    code, discountType, discountAmount, expiryDate, maxUses, usedCount
+    */
+    const myconsole = new Econsole("joi-validators.js", "validateVoucher", "")
+    myconsole.log("entry")
+    const code = crypto.randomBytes(3).toString('hex').slice(0, 3).toUpperCase();
+    req.body.code = code;
+    const { discountType, discountAmount, expiryDate, maxUses, usedCount} = req.body;
+    console.log(code, discountType, discountAmount, expiryDate, maxUses, usedCount)
+    const obj = { code, discountType, discountAmount, expiryDate, maxUses, usedCount }
+    var expectedVoucherProperties = Joi.object({
+        code: Joi.string().required(),
+        discountType: Joi.string().valid('percentage', 'fixed').required(),
+        discountAmount: Joi.number().required(),
+        expiryDate: Joi.date().required(),
+        maxUses: Joi.number().required(),
+        usedCount: Joi.number().default(0),
+    })
+    const { error } = expectedVoucherProperties.validate(obj)
+    if (error) { 
+        myconsole.log(error.message);
+        res.json({ errorMessage: error.message });
+        return error.message; 
+    } else { 
+        myconsole.log("exits"), 
+        next() 
+    }
 });
