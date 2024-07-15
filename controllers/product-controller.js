@@ -11,7 +11,7 @@ exports.addANewProduct=createOne(Product)
 exports.retrieveAllProducts = catchAsync(async (req, res) => {
   const myconsole = new Econsole("product-controller.js", "retrieveAllProducts", "")
   myconsole.log("entry")
-  const features = new QueryMethod(Product.find(), req.query)
+  const features = new QueryMethod(Product.find().populate("reviews"), req.query)
     .sort()
     .limit()
     .paginate()

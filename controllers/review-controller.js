@@ -3,24 +3,20 @@ const catchAsync = require("../utils/catch-async");
 const Econsole = require("../utils/econsole-log");
 const Product = require("../models/product")
 const Review = require("../models/review")
-const { getOne, updateOne, deleteOne } = require("./generic-controller");
+const { updateOne, deleteOne } = require("./generic-controller");
 
-exports.getReview = getOne(Review)
-exports.getAllReviews = catchAsync(async (req, res) => {
-  const myconsole = new Econsole("review-controller.js", "getAllReviews", "")
-  myconsole.log("entry")
-  const reviewsQuery = new QueryMethod(Review.find({productId:req.params.productId}), req.query) 
-    .sort()
-    .limit()
-    .paginate()
-    .filter();
-  const reviews = await reviewsQuery.query;
+exports.moveUserIdAndProductIdToRequestBody = catchAsync(async (req, res,next) => {
+  const myconsole = new Econsole("review-controller.js", "moveUserIdAndProductIdToRequestBody", "")
+  const productId = req.query.productId;
+  const userId = req.user.userId
+  myconsole.log("productId=",productId," userId=",userId)
+  req.body.userId = userId
+  req.body.productId = productId;
   myconsole.log("exits")
-  res.status(200).json({ status: "success", results: reviews.length, data: reviews, });
+  next()
 });
-
 exports.editAReview = updateOne(Review)
-exports.deleteAReview = deleteOne(Product)
+exports.deleteAReview = deleteOne(Review)
 
 exports.reviewProduct = catchAsync(async (req, res) => {
   const myconsole = new Econsole("review-controller.js", "reviewProduct", "")

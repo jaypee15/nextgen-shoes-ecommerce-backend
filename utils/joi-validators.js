@@ -8,7 +8,6 @@ exports.validateProduct = catchAsync(async (req, res, next) => {
     */
     const myconsole = new Econsole("joi-validators.js", "validateProduct", "")
     myconsole.log("entry")
-    //myconsole.log(req)
     const { name, description, price, discount_price, colors, sizes, images, delivery_info, return_info } = req.body;
     console.log(name, description, price, discount_price, colors, sizes, images, delivery_info, return_info)
     const obj = { name, description, price, discount_price, colors, sizes, images, delivery_info, return_info }
@@ -69,11 +68,14 @@ exports.validateOrder = (obj,res) => {
         return true;
     }
 };
-exports.validateReview = (obj,res) => {
+exports.validateReview = catchAsync(async (req, res, next) => {
   /*
   id, product_id, user_id, rating, comment, timestamp  
   */
   const myconsole = new Econsole("joi-validators.js", "validateReview", "")
+  const { productId, userId, rating, comment} = req.body;
+  console.log(productId, userId, rating, comment)
+  const obj = { productId, userId, rating, comment}
   myconsole.log("entry")
   myconsole.log(obj)
   var expectedReviewProperties = Joi.object({
@@ -90,6 +92,6 @@ exports.validateReview = (obj,res) => {
       return false; 
   } else { 
       myconsole.log("exits with true")
-      return true;
+      next();
   }
-};
+});
