@@ -38,6 +38,11 @@ const UserSchema = new mongoose.Schema(
     resetPasswordExpires: {
       type: Date,
     },
+
+    role:{
+      type: String,
+      default: "buyer",
+    }
   },
   {
     toObject: {virtuals: true,},

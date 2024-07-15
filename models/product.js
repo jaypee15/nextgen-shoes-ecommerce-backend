@@ -3,7 +3,6 @@ id, name, description, price, discount_price, colors, sizes, images, delivery_in
 */
 const mongoose = require("mongoose");
 const validator = require("validator");
-const reviewSchema = require('./review').schema;
 
 
 const ProductSchema = new mongoose.Schema(
@@ -44,13 +43,6 @@ const ProductSchema = new mongoose.Schema(
         },
         message: 'There must at least be one image.'
       }
-    },
-
-    colors: [String],
-    sizes: [String],
-    images: {
-      type: [String],
-      required: [true, "provide atleast one image"],
     },
     reviews: [{
       type: mongoose.Schema.Types.ObjectId,

@@ -31,6 +31,7 @@ const createUserSchema = Joi.object({
     "string.min": "Password must be at least 8 characters",
     "any.required": "User must have a password",
   }),
+  role:Joi.string().valid('buyer', 'admin').default("buyer"),
 });
 
 module.exports = createUserSchema;

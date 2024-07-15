@@ -1,4 +1,3 @@
-const QueryMethod = require("../utils/query");
 const catchAsync = require("../utils/catch-async");
 const Econsole = require("../utils/econsole-log");
 const Product = require("../models/product")

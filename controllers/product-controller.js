@@ -11,27 +11,31 @@ exports.addANewProduct=createOne(Product)
 exports.retrieveAllProducts = catchAsync(async (req, res) => {
   const myconsole = new Econsole("product-controller.js", "retrieveAllProducts", "")
   myconsole.log("entry")
-  const features = new QueryMethod(Product.find().populate("reviews"), req.query)
+  const productQuery = new QueryMethod(Product.find().populate("reviews"), req.query)
     .sort()
     .limit()
     .paginate()
     .filter();
-  const docs = await features.query;
+  const products = await productQuery.query;
   myconsole.log("exits")
-  res.status(200).json({ status: "success", results: docs.length, data: docs, });
+  res.status(200).json({ status: "success", results: products.length, data: products, });
 });
 exports.searchProducts = catchAsync(async (req, res) => {
   const myconsole = new Econsole("product-controller.js", "searchProducts", "")
   myconsole.log("entry")
-  const features = new QueryMethod(Product.find({ name: new RegExp(query, 'i') }), req.query)
-    .sort()
-    .limit()
-    .paginate()
-    .filter();
-  const docs = await features.query;
-  myconsole.log("docs=",docs)
+  const q = req.query.q
+  const products = await Product.find({
+    $or: [
+      { name: { $regex: q, $options: 'i' } },        // Case-insensitive search in 'name'
+      { category: { $regex: q, $options: 'i' } },    // Case-insensitive search in 'category'
+      { description: { $regex: q, $options: 'i' } }, // Case-insensitive search in 'description'
+      { $expr: { $regexMatch: { input: { $toString: "$price" }, regex: q, options: 'i' } } }, // Convert and search 'price'
+      { $expr: { $regexMatch: { input: { $toString: "$discount_price" }, regex: q, options: 'i' } } }, // Convert and search 'discount_price'
+    ],
+  })
+  myconsole.log("products=",products)
   myconsole.log("exits")
-  res.status(200).json({ status: "success", results: docs.length, data: docs, });
+  res.status(200).json({ status: "success", results: products.length, data: products, });
 });
 exports.updateProduct = updateOne(Product)
 exports.removeProduct = deleteOne(Product)

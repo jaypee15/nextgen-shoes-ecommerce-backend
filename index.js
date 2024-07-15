@@ -17,6 +17,10 @@ const reviewRoutes = require("./routes/review-route");
 //checkout & order
 const checkoutRoutes = require("./routes/checkout-route.js");
 
+//voucher
+const voucherRoutes = require("./routes/voucher-route.js");
+
+
 const app = express();
 
 app.use(cookieParser());
@@ -32,6 +36,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/checkout", checkoutRoutes);
 app.use("/api/order", checkoutRoutes);
+app.use("/api/vouchers", voucherRoutes);
 
 app.use("*", (req, res, next) => {
   console.log(`route ${req.baseUrl} not found`);
