@@ -69,3 +69,27 @@ exports.validateOrder = (obj,res) => {
         return true;
     }
 };
+exports.validateReview = (obj,res) => {
+  /*
+  id, product_id, user_id, rating, comment, timestamp  
+  */
+  const myconsole = new Econsole("joi-validators.js", "validateReview", "")
+  myconsole.log("entry")
+  myconsole.log(obj)
+  var expectedReviewProperties = Joi.object({
+      userId: Joi.string().required(),
+      productId: Joi.string().required(),
+      rating: Joi.number().required().min(1).max(5),
+      comment: Joi.string(),
+    });
+  const { error } = expectedReviewProperties.validate(obj)
+  if (error) { 
+      myconsole.log(error.message);
+      res.json({ errorMessage: error.message });
+      myconsole.log("exits with false")
+      return false; 
+  } else { 
+      myconsole.log("exits with true")
+      return true;
+  }
+};

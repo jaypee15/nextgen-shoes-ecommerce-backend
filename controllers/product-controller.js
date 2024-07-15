@@ -6,7 +6,6 @@ const { createOne, getOne, updateOne, deleteOne } = require("./generic-controlle
 const { cloudDelete } = require("../utils/cloudinary")
 
 
-
 exports.retrieveProduct = getOne(Product)
 exports.addANewProduct=createOne(Product)
 exports.retrieveAllProducts = catchAsync(async (req, res) => {
@@ -57,4 +56,3 @@ exports.removeProductImages = catchAsync(async (req, res, next) => {
   myconsole.log("exits")
   next()
 });
-
