@@ -22,19 +22,29 @@ exports.getAllReviews = catchAsync(async (req, res) => {
 exports.editAReview = updateOne(Review)
 exports.deleteAReview = deleteOne(Product)
 
-exports.reviewProduct = catchAsync(async (req, res, next) => {
+exports.reviewProduct = catchAsync(async (req, res) => {
+  const myconsole = new Econsole("review-controller.js", "reviewProduct", "")
   try {
-    const productId = req.params.productId;
+    const productId = req.params.id;
+    const userId = req.user.userId
+    myconsole.log("productId=",productId," userId=",userId)
+    req.body.userId = userId
+    req.body.productId = productId;
     const review = new Review(req.body);
 
-    const product = await Product.findById(productId);
+    let product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    product.reviews.push(review);
-    await product.save();
+     // Save the review separately
+    const savedReview = await review.save();
 
+    // Associate the review with the product
+    product.reviews.push(savedReview._id);
+    await product.save();
+    product = await Product.findById(productId).populate('reviews');
+    myconsole.log("exits")
     res.status(201).json(product);
   } catch (err) {
     res.status(500).json({ message: err.message });
