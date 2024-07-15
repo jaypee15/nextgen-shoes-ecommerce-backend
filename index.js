@@ -7,6 +7,8 @@ const ErrorHandler = require("./middlewares/error-handler");
 const userRoutes = require("./routes/user");
 const cartRoutes = require("./routes/cart");
 const favouriteRoutes = require("./routes/favourite");
+const recommendRoutes = require("./routes/recommendation");
+
 
 //product-management
 const productRoutes = require("./routes/product-route");
@@ -26,7 +28,8 @@ app.use(cors());
 //Routes
 app.use("/api/users", userRoutes);
 app.use("/api/carts", cartRoutes);
-app.use("./api/favourites", favouriteRoutes)
+app.use("/api/favourites", favouriteRoutes);
+app.use("/api/recommend/", recommendRoutes);
 
 app.use("/api/products", productRoutes);
 app.use("/api/reviews", reviewRoutes);
