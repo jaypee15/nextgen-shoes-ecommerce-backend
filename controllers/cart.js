@@ -6,7 +6,7 @@ const ErrorObject = require("../utils/error");
 
 const addToCart = asyncHandler(async (req, res, next) => {
   const userId = req.user.userId;
-  const { productId, quantity } = req.body;
+  const { productId, quantity, color } = req.body;
   const product = await Product.findById(productId);
   if (!product) {
     return next(new ErrorObject("Product not found", 404));
@@ -21,12 +21,12 @@ const addToCart = asyncHandler(async (req, res, next) => {
     if (itemIndex > -1) {
       cart.items[itemIndex].quantity += quantity;
     } else {
-      cart.items.push({ productId, quantity });
+      cart.items.push({ productId, quantity, color });
     }
   } else {
     cart = await Cart.create({
       userId,
-      items: [{ productId, quantity }],
+      items: [{ productId, quantity, color }],
     });
   }
 

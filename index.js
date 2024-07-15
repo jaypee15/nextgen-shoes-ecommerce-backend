@@ -6,7 +6,8 @@ const cors = require("cors");
 const ErrorHandler = require("./middlewares/error-handler");
 const userRoutes = require("./routes/user");
 const cartRoutes = require("./routes/cart");
-const favouriteRoutes = require("./routes/favourites");
+const favouriteRoutes = require("./routes/favourite");
+const recommendRoutes = require("./routes/recommendation");
 
 //product-management
 const productRoutes = require("./routes/product-route");
@@ -15,7 +16,6 @@ const productRoutes = require("./routes/product-route");
 const checkoutRoutes = require("./routes/checkout-route.js");
 
 const app = express();
-const cors = require('cors');
 
 app.use(cookieParser());
 app.use(express.json());
@@ -24,7 +24,8 @@ app.use(cors());
 //Routes
 app.use("/api/users", userRoutes);
 app.use("/api/carts", cartRoutes);
-app.use("./api/favourites", favouriteRoutes)
+app.use("/api/favourites", favouriteRoutes);
+app.use("/api/recommend/", recommendRoutes);
 
 app.use("/api/products", productRoutes);
 app.use("/api/checkout", checkoutRoutes);
