@@ -18,9 +18,9 @@ exports.paymentIntialization = async (req,res) => {
   myconsole.log("entry")
   try {
     const amount=Number(req.amount)*Number(req.smallestUnitCurrency)
-    myconsole.log("amount=",amount)
     const email = req.email
-    const callback_url = req.redirect_url.replace(req.amount, amount);
+    const callback_url = req.redirect_url.
+    replace("amount="+req.amount, "amount="+amount);
     const response = await paystack.post('/transaction/initialize', {
       email,
       amount,
@@ -39,6 +39,7 @@ exports.verifyPayment = async (req,res,next) => {
   try {
     const { reference } = req.query;
     const response = await paystack.get(`/transaction/verify/${reference}`);
+
     if (
       response.data.data?.status === "success" &&
       parseInt(response.data.data?.amount) === parseInt(req.query.amount) &&
@@ -67,13 +68,11 @@ exports.getPaymentDetails = async (req,res,next) => {
     const transaction = response.data.data;
 
     if (transaction) {
-      console.log('Transaction Details:', transaction);
-      console.log('Payment Method:', transaction.authorization.channel);
       req.query.paymentMethod = transaction.authorization.channel;
       myconsole.log("exits")
       next();
     } else {
-      console.log('Transaction not found');
+      myconsole.log('Transaction not found');
       res.status(404).json({
         message: "Transaction not found",
       });
