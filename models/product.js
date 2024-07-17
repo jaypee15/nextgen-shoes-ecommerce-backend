@@ -46,12 +46,7 @@ const ProductSchema = new mongoose.Schema(
       }
     },
 
-    colors: [String],
-    sizes: [String],
-    images: {
-      type: [String],
-      required: [true, "provide atleast one image"],
-    },
+   
     reviews: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Review",

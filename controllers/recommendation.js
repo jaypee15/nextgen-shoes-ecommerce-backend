@@ -1,50 +1,30 @@
-const Recommendation = require("../models/recommendation");
-const Product = require("../models/product");
+const Product = require('../models/product');
 
-// Add a recommendation
-const addRecommendation = async (req, res) => {
-  try {
-    const { productId, recommendedProductId } = req.body;
+// Recommend products based on same size or price
+const recommendProducts = async (req, res) => {
+    try {
+        const { productId } = req.params;
 
-    // Check if both products exist
-    const product = await Product.findById(productId);
-    const recommendedProduct = await Product.findById(recommendedProductId);
+        // Find the product by ID
+        const product = await Product.findById(productId);
 
-    if (!product || !recommendedProduct) {
-      return res.status(404).json({ message: "Product(s) not found" });
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        // Find products with the same size or price
+        const recommendedProducts = await Product.find({
+            $or: [
+                { sizes: { $in: product.sizes } },
+                { price: product.price }
+            ],
+            _id: { $ne: productId } // Exclude the original product
+        });
+
+        res.status(200).json(recommendedProducts);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-
-    // Create and save the recommendation
-    const recommendation = new Recommendation({
-      productId,
-      recommendedProductId,
-    });
-    await recommendation.save();
-
-    res.status(201).json(recommendation);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
 };
 
-// Get recommendations for a given product
-const getRecommendations = async (req, res) => {
-  try {
-    const { productId } = req.params;
-
-    // Find recommendations for the product
-    const recommendations = await Recommendation.find({ productId }).populate(
-      "recommendedProductId"
-    );
-
-    if (!recommendations) {
-      return res.status(404).json({ message: "Recommendations not found" });
-    }
-
-    res.status(200).json(recommendations);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-module.exports = { addRecommendation, getRecommendations };
+module.exports = {recommendProducts}
