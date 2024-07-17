@@ -44,6 +44,7 @@ const ProductSchema = new mongoose.Schema(
         message: 'There must at least be one image.'
       }
     },
+
     reviews: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Review",
