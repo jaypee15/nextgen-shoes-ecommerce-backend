@@ -7,7 +7,7 @@ const {
   updateProduct,
   removeProduct,
   removeProductImages,
-  searchProducts
+  searchProducts,
 } = require("../controllers/product-controller");
 const {
   reviewProduct
@@ -15,14 +15,17 @@ const {
 const {
   restrictTo
 } = require("../controllers/generic-controller");
+const {
+  applyVoucher,
+} = require("../controllers/checkout-controller");
 const {validateProduct}= require("../utils/joi-validators")
 const {uploadImagesToTempLocation,uploadImagesToCloudinary}= require("../utils/file-upload")
 const protect = require("../middlewares/protect");
 
-
 const router = express.Router();
 
-router.post("/",protect,restrictTo("admin"),uploadImagesToTempLocation,uploadImagesToCloudinary,validateProduct,addANewProduct);
+router.post("/",protect,restrictTo("admin"),uploadImagesToTempLocation,uploadImagesToCloudinary,validateProduct,addANewProduct).
+post("/applyvoucher",protect,applyVoucher);
 router.get("/",retrieveAllProducts).
 get("/search",searchProducts);
 router.route("/:id").

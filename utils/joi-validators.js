@@ -102,8 +102,11 @@ exports.validateVoucher = catchAsync(async (req, res, next) => {
     */
     const myconsole = new Econsole("joi-validators.js", "validateVoucher", "")
     myconsole.log("entry")
-    const code = crypto.randomBytes(3).toString('hex').slice(0, 3).toUpperCase();
-    req.body.code = code;
+    let code = req.body.code;
+    if (!code) {
+        code = crypto.randomBytes(3).toString('hex').slice(0, 3).toUpperCase();
+        req.body.code = code;
+    }
     const { discountType, discountAmount, expiryDate, maxUses, usedCount} = req.body;
     console.log(code, discountType, discountAmount, expiryDate, maxUses, usedCount)
     const obj = { code, discountType, discountAmount, expiryDate, maxUses, usedCount }
