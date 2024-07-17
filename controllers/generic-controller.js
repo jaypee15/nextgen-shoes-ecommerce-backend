@@ -6,6 +6,7 @@ const catchAsync = require("../utils/catch-async");
 const ErrorObject = require("../utils/error");
 const sendEmail = require("../utils/email-service");
 const Econsole = require("../utils/econsole-log");
+const User = require("../models/user");
 
 const { JWT_COOKIE_EXPIRES_IN, EXPIRES_IN, JWT_SECRET, NODE_ENV } =
   process.env;
@@ -238,19 +239,21 @@ exports.protect = (Model) =>
   });
 
 // Authorization
-exports.restrictTo = (...roles) => {
-  return (req, res, next) => {
+exports.restrictTo = (...roles) => catchAsync(async (req, res, next) => {
     const myconsole = new Econsole("generic-controller.js", "restrictTo", "")
     myconsole.log("entry")
-    if (!roles.includes(req.user.role)) {
+    const userId = req.user.userId
+    const user = await User.findById(userId)
+
+    myconsole.log("roles=",roles," user.role=",user.role)
+    if (!roles.includes(user.role)) {
       return next(
         new ErrorObject("You are not authorised to perform this action.", 403)
       );
     }
     myconsole.log("exits")
     next();
-  };
-};
+  });
 
 exports.forgotPassword = (Model) =>
   catchAsync(async (req, res, next) => {

@@ -23,6 +23,20 @@ const {
 } = process.env;
 const macaddress = require('macaddress');
 
+const applyVoucher = (voucher,totalAmount)=>{
+    if(!voucher) return 0;
+    let discountAmount = voucher.discountAmount;
+    let discountType = voucher.discountType;
+    let expiryDate = new Date(voucher.expiryDate);
+    if(expiryDate < Date.now()){
+        return 0;
+    }
+    if(discountType === "percentage"){
+        discountAmount = (discountAmount/100) * totalAmount;
+    }
+    return discountAmount;
+}
+
 exports.processCart = catchAsync(async (req, res) => {
     const myconsole = new Econsole("checkout-controller.js", "processCart", "")
     myconsole.log("user=",req.user.userId)
@@ -75,7 +89,7 @@ exports.processCart = catchAsync(async (req, res) => {
         if (req.body.voucherCode) {
             //find the voucher and subtract from the totalAmount of goods in Cart
             const voucher = await Voucher.findOne({ code });
-            totalAmount -= voucher.discountAmount
+            totalAmount -= applyVoucher(voucher,totalAmount)
         }
         // Create the order
         const orderProperties = {
