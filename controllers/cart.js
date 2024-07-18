@@ -49,7 +49,7 @@ const getCart = asyncHandler(async (req, res, next) => {
 const updateCart = asyncHandler(async (req, res, next) => {
   const userId = req.user.userId;
   const { productId } = req.params;
-  const { quantity } = req.body;
+  const { quantity, color } = req.body;
 
   const cart = await Cart.findOne({ userId });
   if (!cart) {
@@ -61,6 +61,7 @@ const updateCart = asyncHandler(async (req, res, next) => {
   );
   if (itemIndex > -1) {
     cart.items[itemIndex].quantity = quantity;
+    cart.items[itemIndex].color = color;
     await cart.save();
   } else {
     return next(new ErrorObject("Product not found in cart", 404));
