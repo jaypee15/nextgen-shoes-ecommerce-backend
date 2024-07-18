@@ -4,8 +4,7 @@
   "description": "This API aims to provide a seamless online shopping experience for users looking to purchase shoes.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./tests/*.spec.js",
-    "test:watch": "mocha --watch ./tests/*.spec.js",
+    "test": "jest",
     "start": "node server.js",
     "start:dev": "nodemon server.js"
   },
