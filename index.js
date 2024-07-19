@@ -3,12 +3,12 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
+const swagger = require("./swagger");
 const ErrorHandler = require("./middlewares/error-handler");
 const userRoutes = require("./routes/user");
 const cartRoutes = require("./routes/cart");
 const favouriteRoutes = require("./routes/favourite");
 const recommendRoutes = require("./routes/recommendation");
-
 
 //product-management
 const productRoutes = require("./routes/product-route");
@@ -21,7 +21,6 @@ const checkoutRoutes = require("./routes/checkout-route.js");
 
 //voucher
 const voucherRoutes = require("./routes/voucher-route.js");
-
 
 const app = express();
 
@@ -40,6 +39,8 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/checkout", checkoutRoutes);
 app.use("/api/order", checkoutRoutes);
 app.use("/api/vouchers", voucherRoutes);
+
+swagger(app);
 
 app.use("*", (req, res, next) => {
   console.log(`route ${req.baseUrl} not found`);
