@@ -38,6 +38,8 @@
     "nvm": "^0.0.4",
     "randomstring": "^1.3.0",
     "sharp": "^0.33.4",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^10.0.0",
     "validator": "^13.12.0"
   },
