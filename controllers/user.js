@@ -9,42 +9,15 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
 const sendEmail = require("../utils/email-service");
 const ErrorObject = require("../utils/error");
-
-const { EXPIRES_IN, SECRET, COOKIE_EXPIRATION } = process.env;
-
-// Helper functions
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, SECRET, { expiresIn: EXPIRES_IN });
-};
-
-const setCookie = (res, token) => {
-  try {
-    res.cookie("jwt", token, {
-      maxAge: new Date(Date.now() + COOKIE_EXPIRATION),
-      httpOnly: true,
-    });
-  } catch (error) {
-    console.error("Error setting cookie:", error);
-  }
-};
-
-const constructUserResponse = (user, token) => {
-  return {
-    status: "success",
-    userId: user._id,
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    phoneNumber: user.phoneNumber,
-    token,
-  };
-};
-
+const {
+  generateToken,
+  constructUserResponse,
+} = require("../utils/helper-functions");
 
 
 // Create User
 const createUser = asyncHandler(async (req, res, next) => {
-  const { firstName, lastName, email, phoneNumber, password,role } = req.body;
+  const { firstName, lastName, email, phoneNumber, password, role } = req.body;
 
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
@@ -57,11 +30,10 @@ const createUser = asyncHandler(async (req, res, next) => {
     email,
     phoneNumber,
     password,
-    role
+    role,
   });
 
   const token = generateToken(user._id);
-  // setCookie(res, token);
 
   const userResponse = constructUserResponse(user, token);
   return res.status(201).json({ user: userResponse });
@@ -76,13 +48,12 @@ const loginUser = asyncHandler(async (req, res, next) => {
     return next(new ErrorObject("Invalid Credentials", 400));
   }
 
-  const isPasswordValid = await bcrypt.compare(password, user.password)
+  const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     return next(new ErrorObject("Invalid Credentials", 400));
-  };
+  }
 
   const token = generateToken(user._id);
-  // setCookie(res, token);
 
   const userResponse = constructUserResponse(user, token);
   return res.status(200).json({ user: userResponse });
@@ -100,7 +71,6 @@ const getUserById = asyncHandler(async (req, res, next) => {
   const { userId } = req.params;
   const user = req.user;
 
-
   if (user.userId != userId) {
     return next(
       new ErrorObject("You are not allowed to access these details", 401)
@@ -117,7 +87,9 @@ const updateUser = asyncHandler(async (req, res, next) => {
   const { email, phoneNumber, firstName, lastName } = req.body;
 
   if (req.user.userId !== userId) {
-    return next(new ErrorObject("You are not allowed to access these details", 401));
+    return next(
+      new ErrorObject("You are not allowed to access these details", 401)
+    );
   }
 
   const updates = {};
@@ -126,11 +98,9 @@ const updateUser = asyncHandler(async (req, res, next) => {
   if (firstName) updates.firstName = firstName;
   if (lastName) updates.lastName = lastName;
 
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    updates,
-    { new: true }
-  ).select("-password");
+  const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+    new: true,
+  }).select("-password");
 
   if (!updatedUser) {
     return next(new ErrorObject("User not Found", 404));
@@ -144,9 +114,10 @@ const deleteUser = asyncHandler(async (req, res, next) => {
   const { userId } = req.params;
 
   if (req.user.userId !== userId) {
-    return next(new ErrorObject("You are not allowed to access these details", 401));
+    return next(
+      new ErrorObject("You are not allowed to access these details", 401)
+    );
   }
-
 
   const user = await User.findByIdAndDelete(userId);
   if (!user) {
@@ -172,9 +143,10 @@ const updatePassword = asyncHandler(async (req, res, next) => {
   }
 
   if (req.user.userId !== userId) {
-    return next(new ErrorObject("You are not allowed to access these details", 401));
+    return next(
+      new ErrorObject("You are not allowed to access these details", 401)
+    );
   }
-
 
   const user = await User.findById(userId).select("+password");
   if (!user) {
