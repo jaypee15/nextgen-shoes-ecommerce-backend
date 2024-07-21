@@ -4,7 +4,7 @@ const Joi = require("joi");
 const UpdateCartSchema = Joi.object({
   quantity: Joi.number().integer().min(1),
   color: Joi.string(),
-  size: Joi.number().integer,
+  size: Joi.number().integer(),
 });
 
 module.exports = UpdateCartSchema;
