@@ -6,6 +6,7 @@ const {
     getFavourites,
     removeFavourite,
 } = require("../controllers/favourite");
+const validate = require("../middlewares/validator");
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ const router = express.Router();
 router.use(protect);
 
 // favourite routes
-router.post("/", addFavourite);
+router.post("/", validate("addFavourites"), addFavourite);
 router.get("/", getFavourites);
 router.delete("/:productId", removeFavourite);
 
