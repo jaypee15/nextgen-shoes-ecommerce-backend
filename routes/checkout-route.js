@@ -11,6 +11,6 @@ const {
 const router = express.Router();
 
 router.post('/', protect,processCart);
-router.get("/:userId",protect,verifyPayment,getPaymentDetails,processOrder);
+router.get("/:userId",verifyPayment,getPaymentDetails,processOrder);
 
 module.exports = router;
