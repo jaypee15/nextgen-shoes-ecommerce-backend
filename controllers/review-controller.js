@@ -2,6 +2,7 @@ const catchAsync = require("../utils/catch-async");
 const Econsole = require("../utils/econsole-log");
 const Product = require("../models/product")
 const Review = require("../models/review")
+const User = require("../models/user")
 const { updateOne, deleteOne } = require("./generic-controller");
 
 exports.moveUserIdAndProductIdToRequestBody = catchAsync(async (req, res,next) => {
@@ -38,9 +39,12 @@ exports.reviewProduct = catchAsync(async (req, res) => {
     // Associate the review with the product
     product.reviews.push(savedReview._id);
     await product.save();
-    product = await Product.findById(productId).populate('reviews');
+    //product = await Product.findById(productId).populate('reviews');
+    const user = await User.findById(userId);
+    //const reviewData = {firstName:}
     myconsole.log("exits")
-    res.status(201).json(product);
+    //res.status(201).json(product);
+    res.status(201).json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
