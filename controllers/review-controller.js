@@ -41,10 +41,10 @@ exports.reviewProduct = catchAsync(async (req, res) => {
     await product.save();
     //product = await Product.findById(productId).populate('reviews');
     const user = await User.findById(userId);
-    //const reviewData = {firstName:}
+    const reviewData = {data:{user:user,review:savedReview}}
     myconsole.log("exits")
     //res.status(201).json(product);
-    res.status(201).json(user);
+    res.status(201).json(reviewData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
