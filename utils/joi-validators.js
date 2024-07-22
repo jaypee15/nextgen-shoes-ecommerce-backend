@@ -50,6 +50,7 @@ exports.validateOrder = (obj,res) => {
         paymentMethod: Joi.string().optional().allow(''),
         voucherCode: Joi.string().optional().allow(''),
         totalAmount: Joi.number().required(),
+        currency: Joi.string().required(),
         products: Joi.array().items(
           Joi.object({
             productId: Joi.string().required(),
