@@ -9,7 +9,6 @@ exports.moveUserIdAndProductIdToRequestBody = catchAsync(async (req, res,next) =
   const myconsole = new Econsole("review-controller.js", "moveUserIdAndProductIdToRequestBody", "")
   const productId = req.query.productId;
   const userId = req.user.userId
-  myconsole.log("productId=",productId," userId=",userId)
   req.body.userId = userId
   req.body.productId = productId;
   myconsole.log("exits")
@@ -23,7 +22,6 @@ exports.reviewProduct = catchAsync(async (req, res) => {
   try {
     const productId = req.params.id;
     const userId = req.user.userId
-    myconsole.log("productId=",productId," userId=",userId)
     req.body.userId = userId
     req.body.productId = productId;
     const review = new Review(req.body);
