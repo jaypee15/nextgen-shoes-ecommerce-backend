@@ -25,7 +25,8 @@ const generateToken = (userId) => {
       firstName: user.firstName,
       lastName: user.lastName,
       phoneNumber: user.phoneNumber,
-      token,
+      token:token,
+      role:user.role
     };
   };
   
