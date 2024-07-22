@@ -168,6 +168,7 @@ exports.processCart = catchAsync(async (req, res) => {
             paymentMethod: req.body.paymentMethod,
             voucherCode: req.body.voucherCode,
             totalAmount: totalAmount,
+            currency: req.body.currency,
             products: cart.items.map(item => ({
                 productId: item.productId._id.toString(),
                 quantity: item.quantity,
@@ -220,10 +221,41 @@ exports.processOrder = catchAsync(async (req, res) => {
         const order = await Order.findOne({ userId }).populate('products.productId');
         order["paymentMethod"] = req.query.paymentMethod;
         order.save();
-        res.status(200).json({ message: 'Order sucessfully processed awaiting delivery', order: order });
+                /*
+        userId,
+            deliveryAddress: req.body.deliveryAddress,
+            deliveryType: req.body.deliveryType,
+            paymentMethod: req.body.paymentMethod,
+            voucherCode: req.body.voucherCode,
+            totalAmount: totalAmount,
+            products: cart.items.map(item => ({
+                productId: item.productId._id.toString(),
+                quantity: item.quantity,
+                price: item.productId.price,
+            })),
+
+            user
+            firstName,
+            lastName,
+            email,
+        */
+            const authHeader = req.headers['authorization'];
+            let token;
+
+            if (authHeader && authHeader.startsWith('Bearer ')) {
+                token = authHeader.split(' ')[1];
+            }
+            res.set('authorizatoin', `Bearer ${token}`)
+            const message = 'Order sucessfully processed awaiting delivery'
+            res.redirect(`https://shoes-jet.vercel.app/success?userId=${userId}&orderId=${order.id}`+
+                `&message=${message}`)
+        //res.status(200).json({ message: 'Order sucessfully processed awaiting delivery', order: order });
     } catch (error) {
         console.error('Error saving transaction log:', error);
-        res.status(400).json({ message: `Order processing unsucessful, ${error}` });
+        //res.status(400).json({ message: `Order processing unsucessful, ${error}` });
+        const message = `Order processing unsucessful ${error}`
+        res.redirect(`https://shoes-jet.vercel.app/success?userId=${userId}&orderId=${order.id}`+
+            `&message=${message}`)
     }
     myconsole.log("exits")
 });

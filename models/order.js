@@ -15,6 +15,7 @@ const OrderSchema = new mongoose.Schema(
     paymentMethod: { type: String, required: false },
     voucherCode: { type: String,required:false},
     totalAmount: { type: Number, required: true },
+    currency:{type:String,required:false},
     products: [
       {
         productId: {
