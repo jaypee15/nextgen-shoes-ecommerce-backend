@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const { EXPIRES_IN, SECRET, COOKIE_EXPIRATION } = process.env;
 
 // Helper functions
