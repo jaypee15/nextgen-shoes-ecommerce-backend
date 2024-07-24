@@ -1,17 +1,24 @@
 
-# Shoes E-commerce Project
+# Shoes-Jet E-commerce Project
 
-This repository has the backend code for the shoes ecommerce project.
+Backend for the shoes-jet ecommerce project.
+
+Find full deployed project [here](https://shoes-jet.vercel.app/)
+
+And the backend API [here](https://nextgen-shoes-backend.vercel.app/api)
+
+Postman Docs [here](https://documenter.getpostman.com/view/20410581/2sA3dvmD4h)
 
 ## Overview
 
-Welcome to the Shoes E-commerce Project! This application aims to provide a seamless online shopping experience for users looking to purchase shoes. The platform includes features like product browsing, searching, filtering, user authentication, and a shopping cart.
+Welcome to the Shoes-Jet E-commerce Project! This application aims to provide a seamless online shopping experience for users looking to purchase shoes. The platform includes features like product browsing, searching, filtering, user authentication, shopping cart, favourites and orders.
 
 ## Features
 
 - **Product Listing:** Browse a wide range of shoes.
-- **Search and Filter:** Find shoes by category, size, brand, and price.
+- **Search and Filter:** Find shoes by size, brand, and price.
 - **User Authentication:** Register, login, and manage user accounts.
+- **Favourites:** Mark items as favourites and save to buy later.
 - **Shopping Cart:** Add, remove, and manage items in the cart.
 - **Order Processing:** Place orders and track order history.
 
@@ -24,13 +31,15 @@ To clone the repository, run:
 
 ```sh
 git clone git@github.com:jaypee15/nextgen-shoes-ecommerce-backend.git
+
+# cd into the repo
 cd nextgen-shoes-ecommerce-backend
 ```
 
  **Set up the development environment**:
    - Ensure you have npm installed 
 
-   - Install dependencies:
+   - Install dependencies: 
      ```sh
      npm install
      ```
@@ -59,24 +68,18 @@ cd nextgen-shoes-ecommerce-backend
 
 After working on the feature
 
-5. **Commit your changes** and push the feature branch:
+5. **Stage and Commit your changes** and push the feature branch:
    ```sh
    git add .
    git commit -m "Add feature: your feature description"
    ```
-6. **Sync with the local main branch**
 
-    ```sh
-    git checkout main
-    git pull origin main
-    git checkout feature/your-feature-name
-    git merge main
-    ```
-7. **Push the feature branch**
+6. **Push the feature branch to the remote repo**
    ```sh
-    git push origin feature/your-feature-name
+    git push origin feature/your-feature-name:feature/your-feature-name
    ```
-8. **Go to GithHub and create a Pull request to the remote main branch**
+7. **Go to GithHub and create a Pull request to the remote main branch**
+8. Wait for merging or review.
 
 
 
