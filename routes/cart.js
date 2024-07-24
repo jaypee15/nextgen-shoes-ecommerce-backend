@@ -11,12 +11,11 @@ const validate = require("../middlewares/validator");
 
 const router = express.Router();
 
-router.post("/", validate("addToCart"), addToCart);
 // Protect rpoutes
 router.use(protect);
 
 // cart routes
-
+router.post("/", validate("addToCart"), addToCart);
 router.get("/", getCart);
 router.patch("/:productId", validate("updateCart"), updateCart);
 router.delete("/:productId", removeFromCart);
