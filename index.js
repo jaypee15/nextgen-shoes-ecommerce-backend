@@ -3,7 +3,6 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
-const swagger = require("./swagger");
 const ErrorHandler = require("./middlewares/error-handler");
 const userRoutes = require("./routes/user");
 const cartRoutes = require("./routes/cart");
@@ -40,7 +39,6 @@ app.use("/api/checkout", checkoutRoutes);
 app.use("/api/order", checkoutRoutes);
 app.use("/api/vouchers", voucherRoutes);
 
-swagger(app);
 
 app.use("*", (req, res, next) => {
   console.log(`route ${req.baseUrl} not found`);

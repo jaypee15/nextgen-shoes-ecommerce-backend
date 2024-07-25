@@ -25,6 +25,9 @@ router.post("/login", validate("login"), loginUser);
 // Password reset route
 router.post("/password-reset", resetPassword);
 
+// Forgot password route
+router.post("/password/:id", forgotPassword);
+
 // Protected routes (require authentication)
 router.use(protect);
 
@@ -36,7 +39,5 @@ router.delete("/:userId", deleteUser);
 // Password update route
 router.patch("/password/:id", updatePassword);
 
-// Forgot password route
-router.post("/password/:id", forgotPassword);
 
 module.exports = router;

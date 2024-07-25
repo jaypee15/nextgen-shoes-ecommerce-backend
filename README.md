@@ -81,7 +81,13 @@ After working on the feature
 7. **Go to GithHub and create a Pull request to the remote main branch**
 8. Wait for merging or review.
 
+### Testing
+automated tests are written with [Jest](https://jestjs.io/)
 
+To run tests:
+```sh
+npm run test
+```
 
 ### Commit Messages
 
