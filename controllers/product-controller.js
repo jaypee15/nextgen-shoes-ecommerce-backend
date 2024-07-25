@@ -60,3 +60,14 @@ exports.removeProductImages = catchAsync(async (req, res, next) => {
   myconsole.log("exits")
   next()
 });
+exports.getAllReviews = catchAsync(async (req, res) => {
+  const myconsole = new Econsole("product-controller.js", "getAllReviews", "")
+  myconsole.log("entry")
+  const product = await Product.findById(req.params.id).populate("reviews")
+  myconsole.log("product=", product)
+
+  const reviews = product.reviews
+  myconsole.log("reviews=", reviews)
+  myconsole.log("exits")
+  res.status(200).json({ status: "success", results: reviews.length, data: reviews, });
+});

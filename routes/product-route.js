@@ -8,6 +8,7 @@ const {
   removeProduct,
   removeProductImages,
   searchProducts,
+  getAllReviews,
 } = require("../controllers/product-controller");
 const {
   reviewProduct
@@ -27,7 +28,7 @@ const router = express.Router();
 router.post("/",protect,restrictTo("admin"),uploadImagesToTempLocation,uploadImagesToCloudinary,validateProduct,addANewProduct).
 post("/applyvoucher",protect,applyVoucher);
 router.get("/",retrieveAllProducts).
-get("/search",searchProducts);
+get("/search",searchProducts).get("/reviews/:id",getAllReviews);
 router.route("/:id").
 get(retrieveProduct).
 patch(protect,restrictTo("admin"),uploadImagesToTempLocation,uploadImagesToCloudinary,validateProduct,updateProduct).
